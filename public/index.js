@@ -1,22 +1,32 @@
-function main(){
-    const countContainer = document.querySelector('#count-container');
-    const incrementButton = document.querySelector('#increment-button');
-    const decrementButton = document.querySelector('#decrement-button');
+async function main(){
 
-    let countValue = 0;
+    let response = await fetch('http://localhost:3001/listBooks')
+    let books = await response.json()
 
-    function increment(){
-        countValue++;
-        countContainer.textContent = countValue;
-    }
-
-    function decrement(){
-        countValue--;
-        countContainer.textContent = countValue;
-    }
-
-    incrementButton.addEventListener('click', increment);
-    decrementButton.addEventListener('click', decrement);
-    countContainer.textContent = countValue;
+    books.forEach(renderBook)
 }
+
+function renderBook(book){
+    let bookContainer = document.querySelector('.book-container')
+    bookContainer.innerHTML += `
+        <div class="ui card">
+            ${book.imageURL ?`
+                <div class="image">
+                    <img src="${book.imageURL}" />
+                </div>
+            `
+            :``}
+            <div class="content">
+                <a class="header">${book.title}</a>
+                <div class="meta">
+                    <span class="date">Available: ${book.quantity}</span>
+                </div>
+                <div class="description">
+                    ${book.description}
+                </div>
+            </div>
+        </div>
+    `
+}
+
 main()
